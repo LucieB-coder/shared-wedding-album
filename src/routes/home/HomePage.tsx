@@ -1,12 +1,16 @@
-import Layout from "./components/Layout.tsx";
+import {AddImageForm} from "./components/AddImageForm.tsx";
+import {AlbumItemsList} from "./components/AlbumItemsList.tsx";
 
 const HomePage = () => {
+    const guestName = localStorage.getItem("guestName") || "";
+
     return (
-        <Layout>
-            <div className="flex flex-1 items-center justify-center py-8 px-4">
-                <p className="text-white font-parisienne text-5xl text-center backdrop-blur-[2px]">Frank & Corinne</p>
-            </div>
-        </Layout>
+        <div className="flex flex-1 w-full flex-col items-start backdrop-blur-2xl rounded-2xl p-3">
+            <p className="text-white text-start backdrop-blur-[2px]">Bienvenue <span
+                className="capitalize">{guestName}</span> !</p>
+            <AddImageForm/>
+            <AlbumItemsList/>
+        </div>
     )
 }
 export default HomePage;
