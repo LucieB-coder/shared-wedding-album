@@ -4,35 +4,36 @@ import {db, storage} from "../../firebaseConfig";
 import type {AlbumItem, ImageUrls} from "./types.ts";
 import {useMutation} from "@tanstack/react-query";
 import {addDoc, collection} from "firebase/firestore";
+import {v4 as uuid} from "uuid";
 
 export const uploadImageAndCompress = async (albumItem: CreateAlbumItem
 ): Promise<ImageUrls> => {
     try {
-        const uniqueName = `${albumItem.guestName}_${albumItem.createdAt}`;
+        const uniqueName = `${albumItem.guestName}_${albumItem.createdAt}_${uuid()}`;
 
         // === Compress thumbnail ===
         const thumbnail = await imageCompression(albumItem.file, {
-            maxWidthOrHeight: 150,
-            maxSizeMB: 0.05,
+            maxWidthOrHeight: 300,
+            maxSizeMB: 0.5,
             useWebWorker: true,
         });
 
-        const thumbRef = ref(storage, `images/${uniqueName}_thumb.jpg`);
+        const thumbRef = ref(storage, `images/thumbnails/${uniqueName}_thumb.jpg`);
         const thumbSnap = await uploadBytes(thumbRef, thumbnail);
         const thumbnailUrl = await getDownloadURL(thumbSnap.ref);
 
         // === Compress full image ===
         const compressed = await imageCompression(albumItem.file, {
-            maxSizeMB: 0.5,
+            maxSizeMB: 2,
             useWebWorker: true,
         });
 
-        const compressedRef = ref(storage, `images/${uniqueName}_compressed.jpg`);
+        const compressedRef = ref(storage, `images/compressed/${uniqueName}_compressed.jpg`);
         const compressedSnap = await uploadBytes(compressedRef, compressed);
         const compressedUrl = await getDownloadURL(compressedSnap.ref);
 
         // === Original image ===
-        const fullRef = ref(storage, `images/${uniqueName}_original.jpg`);
+        const fullRef = ref(storage, `images/full/${uniqueName}_original.jpg`);
         const fullSnap = await uploadBytes(fullRef, albumItem.file);
         const fullUrl = await getDownloadURL(fullSnap.ref);
 

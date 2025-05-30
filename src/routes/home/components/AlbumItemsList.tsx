@@ -18,19 +18,14 @@ export const AlbumItemsList = () => {
 
     return (
         <div className="p-4 space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-1">
                 {items.map((item: AlbumItem) => (
-                    <div key={item.id} className="rounded-lg border p-3 shadow bg-white">
+                    <div key={item.id}>
                         <img
                             src={item.imageUrls?.thumbnail}
                             alt={item.guestName}
-                            className="w-full rounded"
+                            className="w-full aspect-square object-cover"
                         />
-                        <div className="mt-2">
-                            <p className="font-semibold capitalize">{item.guestName}</p>
-                            <p className="text-xs text-gray-500">{item.moments?.join(", ")}</p>
-
-                        </div>
                     </div>
                 ))}
             </div>

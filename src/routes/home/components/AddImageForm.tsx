@@ -20,13 +20,14 @@ export const AddImageForm = () => {
         );
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (files.length === 0) return;
 
-        files.forEach((file) => {
-            uploadMutation.mutate({file, guestName, moments, createdAt: new Date()});
-        });
+        return await Promise.all(files.map(async (file) => {
+            return await uploadMutation.mutate({file, guestName, moments, createdAt: new Date()});
+        }))
+
     };
 
     return (
