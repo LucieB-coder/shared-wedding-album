@@ -1,17 +1,19 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {type MomentKey, MOMENTS} from "../../../api/images/types.ts";
 import {useUploadImageMutation} from "../../../api/images/mutations.ts";
+import ImageInput from "../../../components/form/ImageInput.tsx";
+import {useNavigate} from "react-router-dom";
 
 export const AddImageForm = () => {
     const [files, setFiles] = useState<File[]>([]);
     const [moments, setMoments] = useState<MomentKey[]>([]);
     const uploadMutation = useUploadImageMutation();
+    const navigate = useNavigate();
 
     const guestName = localStorage.getItem("guestName") || "";
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const selectedFiles = Array.from(e.target.files || []);
-        setFiles(selectedFiles.slice(0, 10));
+    const handleFilesChange = (files: File[]) => {
+        setFiles(files.slice(0, 10));
     };
 
     const handleMomentToggle = (key: MomentKey) => {
@@ -30,21 +32,21 @@ export const AddImageForm = () => {
 
     };
 
+    useEffect(() => {
+        if (uploadMutation.isSuccess) {
+            console.log("Successfully uploaded");
+            setFiles([]);
+            setMoments([]);
+            navigate(`/`);
+        }
+    }, [uploadMutation.isSuccess]);
+
     return (
         <form
             onSubmit={handleSubmit}
-            className="max-w-xl mx-auto p-6 bg-white rounded-xl shadow-md space-y-4"
         >
-            <h2 className="text-2xl font-semibold">Uploader des photos 📸</h2>
-
-            <input
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileChange}
-                className="w-full"
-            />
-            <p className="text-sm text-gray-500">
+            <ImageInput onImageChanged={handleFilesChange} images={[]}/>
+            <p className="text-sm text-white/70 pb-5">
                 {files.length} image(s) sélectionnée(s) / max 10
             </p>
 
@@ -58,8 +60,8 @@ export const AddImageForm = () => {
                             onClick={() => handleMomentToggle(key as MomentKey)}
                             className={`px-3 py-1 rounded-full border ${
                                 moments.includes(key as MomentKey)
-                                    ? "bg-green-100 border-green-500"
-                                    : "bg-gray-100"
+                                    ? " border-green-500 text-green-500"
+                                    : "border-white/70"
                             }`}
                         >
                             {label}
@@ -71,13 +73,13 @@ export const AddImageForm = () => {
             <button
                 type="submit"
                 disabled={uploadMutation.isPending}
-                className="w-full py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+                className="w-full bg-white text-green-900 py-2 px-3 rounded-full disabled:opacity-70 font-semibold my-4"
             >
-                {uploadMutation.isPending ? "Envoi..." : "Envoyer les images"}
+                {uploadMutation.isPending ? "Envoi en cours...\n Ceci peut prendre quelques secondes" : "Ajouter les photos"}
             </button>
 
             {uploadMutation.isSuccess && (
-                <p className="text-green-600 font-medium">Upload réussi ✅</p>
+                <p className="text-green-600 font-medium">Les photos on été ajoutées à l'album ✅</p>
             )}
             {uploadMutation.isError && (
                 <p className="text-red-600">Erreur : {uploadMutation.error?.message}</p>

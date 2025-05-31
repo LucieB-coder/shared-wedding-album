@@ -5,6 +5,7 @@ import type {AlbumItem, ImageUrls} from "./types.ts";
 import {useMutation} from "@tanstack/react-query";
 import {addDoc, collection} from "firebase/firestore";
 import {v4 as uuid} from "uuid";
+import {queryClient} from "../../main.tsx";
 
 export const uploadImageAndCompress = async (albumItem: CreateAlbumItem
 ): Promise<ImageUrls> => {
@@ -76,5 +77,8 @@ export const useUploadImageMutation = () => {
                 throw (e);
             }
         },
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: [`album-items`]})
+        }
     });
 };

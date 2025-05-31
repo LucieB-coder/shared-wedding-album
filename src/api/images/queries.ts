@@ -1,16 +1,16 @@
 // src/api/images/queries.ts
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { collection, getDocs, limit, orderBy, query, startAfter } from "firebase/firestore";
-import { db } from "../../firebaseConfig";
-import type { AlbumItem } from "./types";
+import {useInfiniteQuery} from "@tanstack/react-query";
+import {collection, getDocs, limit, orderBy, query, startAfter} from "firebase/firestore";
+import {db} from "../../firebaseConfig";
+import type {AlbumItem} from "./types";
 
-const PAGE_SIZE = 10; // ou ce que tu veux
+const PAGE_SIZE = 12;
 const STALE_MINUTES = 5;
 
 export const useAlbumItems = () => {
     return useInfiniteQuery<AlbumItem[], Error>({
-        queryKey: ["albumItems"],
-        queryFn: async ({ pageParam }) => {
+        queryKey: ["album-items"],
+        queryFn: async ({pageParam}) => {
             const albumItems: AlbumItem[] = [];
 
             const baseQuery = query(
@@ -23,7 +23,7 @@ export const useAlbumItems = () => {
             const snapshot = await getDocs(baseQuery);
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                albumItems.push({ id: doc.id, ...data } as AlbumItem);
+                albumItems.push({id: doc.id, ...data} as AlbumItem);
             });
 
             return albumItems;

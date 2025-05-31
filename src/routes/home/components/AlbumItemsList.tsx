@@ -11,13 +11,13 @@ export const AlbumItemsList = () => {
         isFetchingNextPage,
     } = useAlbumItems();
 
-    if (isLoading) return <p>Chargement...</p>;
-    if (isError) return <p>Erreur de chargement ❌</p>;
+    if (isLoading) return <p className="flex-1">Chargement...</p>;
+    if (isError) return <p  className="flex-1">Erreur de chargement ❌</p>;
 
     const items = data?.pages.flat() || [];
 
     return (
-        <div className="p-4 space-y-4">
+        <div className="py-4 space-y-4">
             <div className="grid grid-cols-3 gap-1">
                 {items.map((item: AlbumItem) => (
                     <div key={item.id}>
