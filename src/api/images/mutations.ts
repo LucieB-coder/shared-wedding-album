@@ -25,6 +25,7 @@ export const uploadImageAndCompress = async (albumItem: CreateAlbumItem
 
         // === Compress full image ===
         const compressed = await imageCompression(albumItem.file, {
+            maxWidthOrHeight: 1480,
             maxSizeMB: 2,
             useWebWorker: true,
         });

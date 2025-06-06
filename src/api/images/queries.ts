@@ -4,7 +4,7 @@ import {collection, getDocs, limit, orderBy, query, startAfter} from "firebase/f
 import {db} from "../../firebaseConfig";
 import type {AlbumItem} from "./types";
 
-const PAGE_SIZE = 12;
+const PAGE_SIZE = 15;
 const STALE_MINUTES = 5;
 
 export const useAlbumItems = () => {
