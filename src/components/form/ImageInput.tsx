@@ -84,16 +84,16 @@ const ImageInput = (props: ImageInputProps) => {
                     {selectedImages.length != 0 ? (
                         <>
                             <p className="font-semibold text-sm text-white/70">
-                                {selectedImages.length} image{selectedImages.length > 1 && "s"}{" "}
-                                chargée{selectedImages.length > 1 && "s"}
+                                {selectedImages.length} médias{selectedImages.length > 1 && "s"}{" "}
+                                chargés{selectedImages.length > 1 && "s"}
                             </p>
                             <p className="font-semibold text-sm text-white/70">
-                                Cliquez pour ajouter des images
+                                Cliquez pour ajouter des médias
                             </p>
                         </>
                     ) : (
                         <p className="font-semibold text-sm text-white/70">
-                            Cliquez pour charger des images
+                            Cliquez pour charger des médias
                         </p>
                     )}
 
@@ -104,7 +104,7 @@ const ImageInput = (props: ImageInputProps) => {
                 type="file"
                 id="images"
                 onChange={handleImageChange}
-                accept="image/*"
+                accept="image/*,video/*"
                 multiple={true}
                 style={{display: "none"}}
                 className="bg-pink-200 w-20 h-20"
@@ -115,24 +115,33 @@ const ImageInput = (props: ImageInputProps) => {
                 </div>
             ) : (
                 <div className="grid grid-cols-2 gap-2 pt-2 md:grid-cols-4">
-                    {selectedImages.map((image, index) => (
-                        <div className="relative flex items-center" key={index}>
-                            <img
-                                className="object-cover object-center h-full aspect-square"
-                                src={
-                                    URL.createObjectURL(image)
-                                }
-                                alt={`image_${index}`}
-                            />
-                            <button
-                                type="button"
-                                className="absolute top-1 right-1 rounded-lg bg-red-300 p-2"
-                                onClick={() => handleImageDelete(index)}
-                            >
-                                <XIcon className="text-red-800 h-4"/>
-                            </button>
-                        </div>
-                    ))}
+                    {selectedImages.map((file, index) => {
+                        const isVideo = file.type.startsWith("video/");
+                        const src = URL.createObjectURL(file);
+
+                        return (
+                            <div className="relative flex items-center" key={index}>
+                                {isVideo ? (
+                                    <video controls className="object-cover h-full aspect-square">
+                                        <source src={src} type={file.type}/>
+                                    </video>
+                                ) : (
+                                    <img
+                                        className="object-cover h-full aspect-square"
+                                        src={src}
+                                        alt={`media_${index}`}
+                                    />
+                                )}
+                                <button
+                                    type="button"
+                                    className="absolute top-1 right-1 rounded-lg bg-red-300 p-2"
+                                    onClick={() => handleImageDelete(index)}
+                                >
+                                    <XIcon className="text-red-800 h-4"/>
+                                </button>
+                            </div>
+                        );
+                    })}
                 </div>
             )}
         </div>

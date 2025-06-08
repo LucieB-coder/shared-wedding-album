@@ -59,11 +59,24 @@ export const AlbumItemsList = () => {
             <div className="grid grid-cols-3 md:grid-cols-6 gap-1 max-w-5xl">
                 {items.map((item: AlbumItem, index: number) => (
                     <button key={item.id} onClick={() => handlePhotoClick(index)} className="cursor-pointer">
-                        <img
-                            src={item.imageUrls?.thumbnail}
-                            alt={item.guestName}
-                            className="w-full aspect-square object-cover"
-                        />
+                        {item.imageUrls.compressed?.endsWith(".mp4") ||
+                        item.imageUrls.compressed?.includes("video") ? (
+                            <video
+                                height={"90%"}
+                                preload='metadata'
+                                className="w-full aspect-square object-cover"
+                            >
+                                <source src={item.imageUrls.compressed} type="video/mp4"/>
+                                Your browser does not support the video tag.
+                            </video>
+                        ) : (
+                            <img
+                                alt={`Photo ${item.id}`}
+                                src={item.imageUrls.compressed}
+                                height={"90%"}
+                                className="w-full aspect-square object-cover"
+                            />
+                        )}
                     </button>
                 ))}
             </div>

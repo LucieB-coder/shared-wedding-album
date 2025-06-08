@@ -87,12 +87,25 @@ export const PhotoGalleryModal = ({
                                     >
                                         <div className="flex flex-col h-full w-full">
                                             <div className="flex-1 flex items-center justify-center overflow-hidden">
-                                                <img
-                                                    alt={`Photo ${photo.id}`}
-                                                    src={photo.imageUrls.compressed}
-                                                    height={"90%"}
-                                                    className="max-h-[80vh] max-w-full object-contain"
-                                                />
+                                                {photo.imageUrls.compressed?.endsWith(".mp4") ||
+                                                photo.imageUrls.compressed?.includes("video") ? (
+                                                    <video
+                                                        controls
+                                                        height={"90%"}
+                                                        className="max-h-[80vh] max-w-full object-contain"
+                                                    >
+                                                        <source src={photo.imageUrls.compressed} type="video/mp4"/>
+                                                        Your browser does not support the video tag.
+                                                    </video>
+                                                ) : (
+                                                    <img
+                                                        alt={`Photo ${photo.id}`}
+                                                        src={photo.imageUrls.compressed}
+                                                        height={"90%"}
+                                                        className="max-h-[80vh] max-w-full object-contain"
+                                                    />
+                                                )}
+
                                             </div>
                                             <div className="flex justify-center w-full p-2 z-50">
                                                 <div className="text-center text-primary-200">
