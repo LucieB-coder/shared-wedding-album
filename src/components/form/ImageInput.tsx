@@ -104,7 +104,7 @@ const ImageInput = (props: ImageInputProps) => {
                 type="file"
                 id="images"
                 onChange={handleImageChange}
-                accept="image/*"
+                accept="image/*, video/*"
                 multiple={true}
                 style={{display: "none"}}
                 className="bg-pink-200 w-20 h-20"
