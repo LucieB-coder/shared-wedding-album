@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import GlassCard from "../../components/GlassCard.tsx";
 
-const VALID_GUESTS_NAMES = ["frank", "corinne", "marceline", "rory", "odile", "violaine", "cyril", "chloé", "lenny", "guillaume", "sandrine", "emma", "cédric", "emilie", "loann", "karine", "jean-paul", "lucie", "léo"]
+const VALID_GUESTS_NAMES = ["frank", "corinne", "marceline", "rory", "odile", "violaine", "cyril", "chloé", "lenny", "guillaume", "sandrine", "emma", "cédric", "emilie", "loann", "wendy", "karine", "jean-paul", "lucie", "léo"]
 
 const GuestAccessPage = () => {
     const [name, setName] = useState("");
