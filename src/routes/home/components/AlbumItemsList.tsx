@@ -66,13 +66,13 @@ export const AlbumItemsList = () => {
                                 preload='metadata'
                                 className="w-full aspect-square object-cover"
                             >
-                                <source src={item.imageUrls.compressed} type="video/mp4"/>
+                                <source src={item.imageUrls.thumbnail} type="video/mp4"/>
                                 Your browser does not support the video tag.
                             </video>
                         ) : (
                             <img
                                 alt={`Photo ${item.id}`}
-                                src={item.imageUrls.compressed}
+                                src={item.imageUrls.thumbnail}
                                 height={"90%"}
                                 className="w-full aspect-square object-cover"
                             />

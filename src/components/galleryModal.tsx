@@ -1,4 +1,10 @@
-import { ChevronLeft, ChevronRight, TrashIcon } from "lucide-react";
+import { getBlob, getStorage, ref } from "firebase/storage";
+import {
+  ChevronLeft,
+  ChevronRight,
+  DownloadIcon,
+  TrashIcon,
+} from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDeleteAlbumItemMutation } from "../api/images/mutations.ts";
 import { type AlbumItem, MOMENTS } from "../api/images/types.ts";
@@ -28,6 +34,31 @@ export const PhotoGalleryModal = ({
 }) => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const deleteItem = useDeleteAlbumItemMutation();
+
+  const [isDownloading, setIsDownloading] = useState(false);
+  const handleDownload = async (item: AlbumItem) => {
+    setIsDownloading(true);
+    try {
+      const storage = getStorage();
+      const storageRef = ref(storage, item.imageUrls.fullImage);
+
+      const blob = await getBlob(storageRef);
+
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${item.guestName || "photo"}.jpg`;
+      document.body.appendChild(link);
+      link.click();
+
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+      setIsDownloading(false);
+    } catch (error) {
+      setIsDownloading(false);
+      console.error("Erreur de téléchargement:", error);
+    }
+  };
 
   useEffect(() => {
     if (carouselApi && selectedPhotoIndex !== null) {
@@ -125,7 +156,7 @@ export const PhotoGalleryModal = ({
                         ) : (
                           <img
                             alt={`Photo ${item.id}`}
-                            src={item.imageUrls.compressed}
+                            src={item.imageUrls.fullImage}
                             height={"90%"}
                             className="max-h-[80vh] max-w-full object-contain"
                           />
@@ -144,6 +175,14 @@ export const PhotoGalleryModal = ({
                             <p key={m}>{MOMENTS[m]}</p>
                           ))}
                         </div>
+                        <Button
+                          className="text-emerald-800 bg-white hover:bg-surface/80"
+                          onClick={() => handleDownload(item)}
+                          disabled={isDownloading}
+                        >
+                          <DownloadIcon className="size-5 shrink-0" />{" "}
+                          Télécharger
+                        </Button>
                         <DeleteItemButton
                           onDelete={() => onDeleteItem({ item })}
                           disabled={deleteItem.isPending}
